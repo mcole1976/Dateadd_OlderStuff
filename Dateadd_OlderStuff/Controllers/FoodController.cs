@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using CreateExercises;
 using ExerciseMethodShareDtNt;
 using Dateadd_OlderStuff.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.CodeDom;
+using Dateadd_OlderStuff.Service;
 
 namespace Dateadd_OlderStuff.Controllers
 {
@@ -11,7 +14,21 @@ namespace Dateadd_OlderStuff.Controllers
         // GET: FoodController1
         public ActionResult Index()
         {
-            return View();
+            var model = new Food();
+            model.Created = DateTime.Now;
+            List <string> mealTypes = new List<string>();
+
+            Service.ServiceDB serviceDB = new Service.ServiceDB();
+            mealTypes = serviceDB.MakeDDLLIst();
+            model.MealOptions = new List<SelectListItem>();
+
+            foreach (var meal in mealTypes)
+            {
+                SelectListItem s = new SelectListItem{ Value = meal, Text =meal };
+                model.MealOptions.Add(s);
+            }
+
+            return View(model);
         }
 
         // GET: FoodController1/Details/5
@@ -54,7 +71,23 @@ namespace Dateadd_OlderStuff.Controllers
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                string description = collection["Description"];
+                string meal = collection["Meal"];
+                string calories = collection["Calories"];
+                string created = collection["Created"];
+
+                Food_Log f = new Food_Log();
+                f.Meal_Description = description;
+                f.Meal = meal;
+                f.Date = DateTime.Parse(created);
+                f.Calorie_Count = int.Parse(calories);
+
+                ServiceDB s = new ServiceDB();
+
+                s.makeFood(f);
+
+                // Return a new, empty model to clear the form
+                return View(new Food_Log());
             }
             catch
             {

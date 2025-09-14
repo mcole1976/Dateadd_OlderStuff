@@ -1,17 +1,23 @@
-﻿namespace Dateadd_OlderStuff.Service
+﻿using ExerciseMethodShareDtNt;
+
+namespace Dateadd_OlderStuff.Service
 {
     public class ServiceDB
     {
 
-        private bool _dbAction;
-        public ServiceDB() { }
-        public ServiceDB(string name) 
-        { 
+        private readonly string _connectionString;
+        public ServiceDB() {  }
+
+        public List<string> MakeDDLLIst()
+        {
+            return  CreateExercises.ExerciseDataFeed.MealTypeList();
         }
 
-        public ServiceDB(bool dbAction)
+        public void makeFood(Food_Log f)
         {
-            _dbAction = dbAction;
+            CreateExercises.ExerciseDataFeed.Make_Food_Entry_Dated(f);
         }
+
+
     }
 }

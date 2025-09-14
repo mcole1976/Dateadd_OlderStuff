@@ -59,7 +59,7 @@ namespace Dateadd_OlderStuff.Controllers
                 int time = model.Time_taken;
 
                 CreateExercises.ExerciseDataFeed.Make_Exercise_Regiment(4, model.Description, model.Time_taken);
-                CreateExercises.ExerciseDataFeed.Make_Log_Entry_Names(model.Description, model.Time_taken);
+                CreateExercises.ExerciseDataFeed.Make_Log_Entry_Names(model.Calories,model.Description, model.Time_taken);
 
                 return RedirectToAction(nameof(Index));
             }
