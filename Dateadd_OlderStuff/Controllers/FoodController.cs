@@ -6,6 +6,8 @@ using Dateadd_OlderStuff.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.CodeDom;
 using Dateadd_OlderStuff.Service;
+using Dateadd_OlderStuff.Models;
+using System.Reflection;
 
 namespace Dateadd_OlderStuff.Controllers
 {
@@ -30,6 +32,14 @@ namespace Dateadd_OlderStuff.Controllers
 
             return View(model);
         }
+
+
+        //public ActionResult Index(Food m)
+        //{
+            
+
+        //    return View(m);
+        //}
 
         // GET: FoodController1/Details/5
         public ActionResult Details(int id)
@@ -86,13 +96,40 @@ namespace Dateadd_OlderStuff.Controllers
 
                 s.makeFood(f);
 
+
+                ModelState.Clear();
                 // Return a new, empty model to clear the form
-                return View(new Food_Log());
+                Food fd =  fnMakeFmodel();
+
+               
+
+                //return View(model);
+                return View("Index", fd);
+
             }
             catch
             {
                 return View();
             }
+        }
+
+        private Food fnMakeFmodel()
+        {
+            var m = new Food();
+            m.Created = DateTime.Now;
+            List<string> mealTypes = new List<string>();
+
+            Service.ServiceDB serviceDB = new Service.ServiceDB();
+            mealTypes = serviceDB.MakeDDLLIst();
+            m.MealOptions = new List<SelectListItem>();
+
+            foreach (var j in mealTypes)
+            {
+                SelectListItem r = new SelectListItem { Value = j, Text = j };
+                m.MealOptions.Add(r);
+            }
+
+            return m;
         }
 
         // GET: FoodController1/Delete/5
